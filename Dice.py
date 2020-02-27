@@ -8,7 +8,7 @@ class Dice:
 
 
     #Rolls the Dice object, returning a value between 1 and the DieSize
-    def Roll(self, numDie = 1):
+    def Roll(self, numDie = 5):
         i = 0
         theRoll = 0
         while i < numDie:
