@@ -3,7 +3,7 @@ class Dice:
 
     
     #Initializes the Dice object with a number of faces, stored as DieSize
-    def __init__(self, DieSize = 12):
+    def __init__(self, DieSize = 20):
         self.DieSize = DieSize
 
 
