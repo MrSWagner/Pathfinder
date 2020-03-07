@@ -1,11 +1,12 @@
 import Dice
 
 class Entity:
-    def __init__(self, Name, MaxHP, AC, DieSize, Perception, ToHitBonus=0, MultAttackPenalty = 5, DamageBonus=0):
+    def __init__(self, Name, Level, MaxHP, AC, DieSize, Perception, ToHitBonus = 0, MultAttackPenalty = 5, DamageBonus = 0):
         self.Name = Name
         self.HP = MaxHP
         self.MaxHP = MaxHP
         self.AC = AC
+        self.Level = Level
         self.DamageDice = Dice.Dice(DieSize)
         self.Perception = Perception
         self.ToHitBonus = ToHitBonus
@@ -13,6 +14,38 @@ class Entity:
         self.DamageBonus = DamageBonus       
         self.HitDice = Dice.Dice()
         
+    def buildEntity():
+        ErrorFlag = False
+        tryCount = 0
+        while ErrorFlag or tryCount == 0:
+            tryCount += 1
+            try:
+                print("Hello and welcome to the Pathfinder Second Edition Battle Simulator. ")
+                print("The following questions will establish one of the two fighters in the simulation: ")
+                Name = input("What is the character's name? ")
+                Level = int(input("What is the character's level? "))
+                MaxHP = int(input("What is their Maximum number of Health Points? "))
+                AC = int(input("What is their armor class? "))
+                DieSize = int(input("What is the Damage Die Size on your main weapon (enter the number only)? "))
+                Perception = int(input("What is their Perception Bonus? "))
+                ToHitBonus = int(input("What is the Attack Bonus on your main weapon? "))
+                MultAttackPenalty = int(input("What is their Multiple Attack Penalty (Default is 5)? "))
+                DamageBonus = int(input("What is the Damage Bonus on your main weapon? "))
+        
+            #Any value other than integer will throw this exception
+            #This also changes the ErrorFlag to indicate a restart is necessary
+            except ValueError:
+                print("Value Error: You may only enter integers.")
+                ErrorFlag = True
+            print("\n")
+
+            #If there is an error, remind them of what they did wrong
+            if ErrorFlag:
+                print("Re-Enter Number Values Using Only Integers")
+                print("\n")
+            
+            else:
+                return Entity(Name, Level, MaxHP, AC, DieSize, Perception, ToHitBonus, MultAttackPenalty, DamageBonus)
     
     #returns the entity's Multiple Attack Penalty
     def getMultAttackPenalty(self):
@@ -118,4 +151,43 @@ class Entity:
                 return KnockOut
         return KnockOut
 
-   
+
+    def CharactersFightToDeath(self, SC):
+        PCInitiative = self.Initiative()
+        SCInitiative = SC.Initiative()
+            
+        while PCInitiative == SCInitiative:
+            PCInitiative = self.Initiative()
+            SCInitiative = SC.Initiative()
+                
+        if PCInitiative > SCInitiative:
+            print("{} rolled a higher initiative!\n".format(self.getName()))
+            Dead = False
+            RoundsCombat = 0
+            while not Dead:
+                RoundsCombat += 1
+                Dead = self.OneRound(SC)
+                if Dead:
+                    break
+                Dead = SC.OneRound(self)
+                if Dead:
+                    break
+                
+            self.Loser(RoundsCombat)
+            SC.Loser(RoundsCombat)
+            
+        else:
+            print("{} rolled a higher initiative!".format(SC.getName()))
+            Dead = False
+            RoundsCombat = 0
+            while not Dead:
+                RoundsCombat += 1
+                Dead = SC.OneRound(self)
+                if Dead:
+                    break
+                Dead = self.OneRound(SC)
+                if Dead:
+                    break
+
+            self.Loser(RoundsCombat)
+            SC.Loser(RoundsCombat)
