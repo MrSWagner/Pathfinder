@@ -43,7 +43,7 @@ class Analysis:
         MinimumRollHit = 0
         CriticalRoll = 0
         for value in range(1, HitDieSize+1):
-            if (value + fighterA_THB) >= fighterB_AC or (((value + fighterA_THB) >= fighterB_AC + 10) and value == 1) or ((value + fighterA_THB) < fighterB_AC and value == 20 and (value + fighterA_THB) >= fighterB_AC + 10):
+            if (((value + fighterA_THB) >= (fighterB_AC + 10)) and value == 1) or ((value + fighterA_THB) < fighterB_AC and value == 20 and (value + fighterA_THB + 10) >= fighterB_AC) or (((value + fighterA_THB) >= fighterB_AC) and value != 1):
                 if hit == 0:
                     MinimumRollHit = value
                 hit += 1

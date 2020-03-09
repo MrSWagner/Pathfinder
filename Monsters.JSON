@@ -1,0 +1,42 @@
+{
+
+"zombieshambler":{
+	"id":423,
+	"level":-1,
+    "name":"Zombie Shambler",
+    "perception":0,
+    "AC":12,
+    "HP":20,
+    "ToHitBonus":7,
+    "multAttackPenalty":5,
+    "DamageBonus":3,
+    "DieSize":6
+    },
+
+"goblindog":{
+	"id":236,
+    "name":"Goblin Dog",
+    "level":1,
+    "perception":6,
+    "AC":17,
+    "HP":17,
+    "ToHitBonus":9,
+    "multAttackPenalty":5,
+    "DamageBonus":3,
+    "DieSize" : 6
+    },
+
+"troll":{
+	"id":395,
+	"name":"Troll",
+	"level":5,
+	"perception":11,
+	"AC":20,
+	"HP":115,
+	"ToHitBonus":14,
+	"multAttackPenalty":4,
+	"DamageBonus":5,
+	"DieSize" : 8
+	}
+
+}
