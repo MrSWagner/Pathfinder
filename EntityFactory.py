@@ -2,9 +2,6 @@ import json
 import Entity
 
 class EntityFactory:
-    
-    def __init__(self, fileName):
-        self.fileName = str(fileName)
 
     #Has the user enter data to build a new PC to use    
     def buildNewPCFromUser():
@@ -16,14 +13,15 @@ class EntityFactory:
                 print("Hello and welcome to the Pathfinder Second Edition Battle Simulator. ")
                 print("The following questions will establish one of the two fighters in the simulation: ")
                 Name = input("What is the character's name? ")
+                Id = int(input("Give your character an ID number. "))
                 Level = int(input("What is the character's level? "))
-                MaxHP = int(input("What is their Maximum number of Health Points? "))
-                AC = int(input("What is their armor class? "))
-                DieSize = int(input("What is the Damage Die Size on your main weapon (enter the number only)? "))
                 Perception = int(input("What is their Perception Bonus? "))
+                AC = int(input("What is their armor class? "))
+                MaxHP = int(input("What is their Maximum number of Health Points? "))
                 ToHitBonus = int(input("What is the Attack Bonus on your main weapon? "))
                 MultAttackPenalty = int(input("What is their Multiple Attack Penalty (Default is 5)? "))
                 DamageBonus = int(input("What is the Damage Bonus on your main weapon? "))
+                DieSize = int(input("What is the Damage Die Size on your main weapon (enter the number only)? "))
         
             #Any value other than integer will throw this exception
             #This also changes the ErrorFlag to indicate a restart is necessary
@@ -39,47 +37,86 @@ class EntityFactory:
             
             else:
                 
-                return Entity.Entity(Name, Level, MaxHP, AC, DieSize, Perception, ToHitBonus, MultAttackPenalty, DamageBonus)
-            
-    #searches through the file and returns true if the entity is present, false if it isn't
-    def EntityLookup(self, EntityID):
-        #Opens and searches the file for the EntityID
-        with open(self.fileName, "r") as json_file:
+                return Entity.Entity(Id, Level, Name, Perception, AC, MaxHP, ToHitBonus, MultAttackPenalty, DamageBonus, DieSize)
+    
+    #Looks for the name in the Monsters.JSON file
+    @staticmethod
+    def MonsterLookup(EntityName):
+        with open("Monsters.JSON", "r") as json_file:
             file = json.load(json_file)
             for entity in file:
-                if EntityID in file:
+                if EntityName in file:
                     return True
             return False
+    
+    #searches for a user saved file
+    @staticmethod
+    def SingleFileLookup(EntityName):
+        EntityFileName = EntityName + ".json"
+        #Opens and searches the file for the EntityID
+        try:
+            with open(EntityFileName, "r") as json_file:
+                file = json.load(json_file)
+                for entity in file:
+                    if EntityName in file:
+                        return True
+        except:
+            return False
+    
+    #Checks all locations for the entity
+    #returns weather it is it's own file (FILE) or in the Monster.json file (MONSTER)
+    #if it isn't in either location, returns 'NO'
+    @staticmethod
+    def CheckFiles(EntityName):
+        #Checks for a user saved file
+        lookupResult = EntityFactory.SingleFileLookup(EntityName)
+        if lookupResult:
+            return "FILE"
+        #Checks for a monster
+        lookupResult = EntityFactory.MonsterLookup(EntityName)
+        if lookupResult:
+            return "MONSTER"
+        #Entity Not Found
+        else:
+            return "NO"
+    
+    #Builds an entity from the JSON file
+    @staticmethod
+    def BuildEntityFromJSON():
+        #Ask user for an entity name and look for it
+        EntityName = input(str("What is the name of the character? "))
+        EntityName = EntityName.replace(' ', '')
+        EntityName = EntityName.lower()
+        lookupResult = EntityFactory.CheckFiles(EntityName)
         
-    #not complete       
-    def BuildEntityFromJSON(self):
-        #Ask user for monster name and look for it in the JSON file
-        EntityID = input(str("What is the name of the monster? "))
-        EntityID = EntityID.replace(' ', '')
-        EntityID = EntityID.lower()
-        lookupResult = self.EntityLookup(EntityID)
-        
-        #if the monster isn't found, ask the user for a different monster
-        while not lookupResult:
-            print("We couldn't find that monster.")
+        #if the entity isn't found, ask the user for a different monster
+        while lookupResult == "NO":
+            print("We couldn't find that character.")
             print("Check your spelling and try again.\n")
-            EntityID = input(str("What is the name of the monster? "))
-            EntityID = EntityID.replace(' ', '')
-            EntityID = EntityID.lower()
-            lookupResult = self.EntityLookup(EntityID)
+            EntityName = input(str("What is the name of the character? "))
+            EntityName = EntityName.replace(' ', '')
+            EntityName = EntityName.lower()
+            lookupResult = EntityFactory.CheckFiles(EntityName)
             
-        #Now that the monster is found, create the entity            
-        with open(self.fileName, "r") as json_file:
-            monsters = json.load(json_file)
-            HP = monsters[EntityID]["HP"]
-            Level = monsters[EntityID]["level"]
-            Name = monsters[EntityID]["name"]
-            AC = monsters[EntityID]["AC"]
-            DieSize = monsters[EntityID]["DieSize"]
-            Perception = monsters[EntityID]["perception"]
-            ToHitBonus = monsters[EntityID]["ToHitBonus"]
-            MultAttackPenalty = monsters[EntityID]["multAttackPenalty"]
-            DamageBonus = monsters[EntityID]["DamageBonus"]
-        return Entity.Entity(Name, Level, HP, AC, DieSize, Perception, ToHitBonus, MultAttackPenalty, DamageBonus)
+        #create the filename
+        if lookupResult == "MONSTER":
+            FileName = "Monsters.JSON"
+        else:
+            FileName = EntityName + ".json"
+            
+        #Now that the entity is found and the filename is made, create the entity            
+        with open(FileName, "r") as json_file:
+            character = json.load(json_file)
+            Id = character[EntityName]["Id"]
+            Level = character[EntityName]["Level"]
+            Name = character[EntityName]["Name"]
+            Perception = character[EntityName]["Perception"]
+            AC = character[EntityName]["AC"]
+            HP = character[EntityName]["HP"]
+            ToHitBonus = character[EntityName]["ToHitBonus"]
+            MultAttackPenalty = character[EntityName]["multAttackPenalty"]
+            DamageBonus = character[EntityName]["DamageBonus"]
+            DieSize = character[EntityName]["DieSize"]
+        return Entity.Entity(Id, Level, Name, Perception, AC, HP, ToHitBonus, MultAttackPenalty, DamageBonus, DieSize)
 
     
