@@ -1,12 +1,14 @@
 import Dice
 
 class Entity:
-    def __init__(self, Name, Level, MaxHP, AC, DieSize, Perception, ToHitBonus = 0, MultAttackPenalty = 5, DamageBonus = 0):
+    def __init__(self, Id, Level, Name, Perception, AC, MaxHP, ToHitBonus, MultAttackPenalty, DamageBonus, DieSize):
+        self.Id = Id
         self.Name = Name
         self.HP = MaxHP
         self.MaxHP = MaxHP
         self.AC = AC
         self.Level = Level
+        self.DieSize = DieSize
         self.DamageDice = Dice.Dice(DieSize)
         self.Perception = Perception
         self.ToHitBonus = ToHitBonus
@@ -15,45 +17,62 @@ class Entity:
         self.HitDice = Dice.Dice()
         
     
-    #returns the entity's Multiple Attack Penalty
-    def getMultAttackPenalty(self):
-        return self.MultAttackPenalty
+    #returns the entities ID number
+    def getId(self):
+        return self.Id
+    
+    #returns the entitie's level
+    def getLevel(self):
+        return self.Level
     
     #returns the name of the entity
     def getName(self):
         return self.Name
     
-    #returns the Max HP for an entity
-    def getMaxHP(self):
-        return self.MaxHP
-    
-    #returns current HP for an entity
-    def getCurrentHP(self):
-        return self.HP
+    #returns the Perception of the entity
+    def getPerception(self):
+        return self.Perception
      
     #returns the AC of the entity
     def getAC(self):
         return self.AC
     
+    #returns the Max HP for an entity
+    def getMaxHP(self):
+        return self.MaxHP
+    
     #returns the ToHitBonus of the entity
     def getToHitBonus(self):
         return self.ToHitBonus
+    
+    #returns the entity's Multiple Attack Penalty
+    def getMultAttackPenalty(self):
+        return self.MultAttackPenalty
     
     #returns the DamageBonus of the entity
     def getDamageBonus(self):
         return self.DamageBonus
     
+    #returns the die size as an integer
+    def getDieSize(self):
+        return self.DieSize
+        
+    #returns current HP for an entity
+    def getCurrentHP(self):
+        return self.HP
+    
+    #appends the name, useful if the names are identical
+    def appendName(self, extra):
+        extra = str(extra)
+        self.Name = self.Name + extra
+        
     #Determines if the entity has been brought to 0 HP or not    
     def isDead(self):
         if self.getCurrentHP() <= 0:
             return True
         else:
             return False
-        
-    #returns the Perception of the entity
-    def getPerception(self):
-        return self.Perception
-    
+            
     #Reduces the entities HP by the amount of damage passed in
     def ApplyDamage(self, damage):
         self.HP = self.HP - damage

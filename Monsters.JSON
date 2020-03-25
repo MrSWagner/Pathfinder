@@ -1,10 +1,10 @@
 {
 
 "zombieshambler":{
-	"id":423,
-	"level":-1,
-    "name":"Zombie Shambler",
-    "perception":0,
+	"Id":423,
+	"Level":-1,
+    "Name":"Zombie Shambler",
+    "Perception":0,
     "AC":12,
     "HP":20,
     "ToHitBonus":7,
@@ -14,10 +14,10 @@
     },
 
 "goblindog":{
-	"id":236,
-    "name":"Goblin Dog",
-    "level":1,
-    "perception":6,
+	"Id":236,
+    "Name":"Goblin Dog",
+    "Level":1,
+    "Perception":6,
     "AC":17,
     "HP":17,
     "ToHitBonus":9,
@@ -27,10 +27,10 @@
     },
 
 "troll":{
-	"id":395,
-	"name":"Troll",
-	"level":5,
-	"perception":11,
+	"Id":395,
+	"Name":"Troll",
+	"Level":5,
+	"Perception":11,
 	"AC":20,
 	"HP":115,
 	"ToHitBonus":14,
